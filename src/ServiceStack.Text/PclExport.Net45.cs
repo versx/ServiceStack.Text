@@ -103,42 +103,6 @@ namespace ServiceStack
         public const string AppSettingsKey = "servicestack:license";
         public const string EnvironmentKey = "SERVICESTACK_LICENSE";
 
-        public override void RegisterLicenseFromConfig()
-        {
-            string licenceKeyText;
-            try
-            {
-                //Automatically register license key stored in <appSettings/>
-                licenceKeyText = System.Configuration.ConfigurationManager.AppSettings[AppSettingsKey];
-                if (!string.IsNullOrEmpty(licenceKeyText))
-                {
-                    LicenseUtils.RegisterLicense(licenceKeyText);
-                    return;
-                }
-            }
-            catch (Exception ex)
-            {
-                licenceKeyText = Environment.GetEnvironmentVariable(EnvironmentKey)?.Trim();
-                if (string.IsNullOrEmpty(licenceKeyText))
-                    throw;
-                try
-                {
-                    LicenseUtils.RegisterLicense(licenceKeyText);
-                }
-                catch
-                {
-                    throw ex;
-                }
-            }
-
-            //or SERVICESTACK_LICENSE Environment variable
-            licenceKeyText = Environment.GetEnvironmentVariable(EnvironmentKey)?.Trim();
-            if (!string.IsNullOrEmpty(licenceKeyText))
-            {
-                LicenseUtils.RegisterLicense(licenceKeyText);
-            }
-        }
-
         public override string GetEnvironmentVariable(string name)
         {
             return Environment.GetEnvironmentVariable(name);
@@ -386,14 +350,6 @@ namespace ServiceStack
         public override void CloseStream(Stream stream)
         {
             stream.Close();
-        }
-
-        public override LicenseKey VerifyLicenseKeyText(string licenseKeyText)
-        {
-            if (!licenseKeyText.VerifyLicenseKeyText(out LicenseKey key))
-                throw new ArgumentException("licenseKeyText");
-
-            return key;
         }
 
         public override void BeginThreadAffinity()

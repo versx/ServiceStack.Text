@@ -17,7 +17,6 @@ namespace ServiceStack.Text
         static JsConfig()
         {
             Reset();
-            LicenseUtils.Init();
         }
 
         // force deterministic initialization of static constructor
